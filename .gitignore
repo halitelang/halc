@@ -1,0 +1,8 @@
+# any halite source files
+*.hal
+
+# any .exe files
+*.exe
+
+# IntelliJ
+.idea/
