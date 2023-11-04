@@ -19,7 +19,7 @@ const (
 	ASSIGN    TokenType = "ASSIGN"
 	PLUS      TokenType = "PLUS"
 	MINUS     TokenType = "MINUS"
-	MODULO    TokenType = "MODDLO"
+	MODULO    TokenType = "MODULO"
 	BANG      TokenType = "BANG"
 	ASTERISK  TokenType = "ASTERISK"
 	SLASH     TokenType = "SLASH"
@@ -52,6 +52,7 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"var":    FUNCTION,
 }
 
 func LookupIdent(ident string) TokenType {
