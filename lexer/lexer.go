@@ -1,10 +1,12 @@
 package lexer
 
+import "strings"
+
 type TokenType string
 
 type Token struct {
-	Type    TokenType
-	Literal string
+	Type  TokenType
+	Value string
 }
 
 const (
@@ -90,7 +92,7 @@ func (l *Lexer) NextToken() Token {
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
-			tok = Token{Type: EQ, Literal: literal}
+			tok = Token{Type: EQ, Value: literal}
 		} else {
 			tok = newToken(ASSIGN, l.ch)
 		}
@@ -110,12 +112,25 @@ func (l *Lexer) NextToken() Token {
 		if l.peekChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			tok = Token{Type: NOT_EQ, Literal: string(ch) + string(l.ch)}
+			tok = Token{Type: NOT_EQ, Value: string(ch) + string(l.ch)}
 		} else {
 			tok = newToken(BANG, l.ch)
 		}
 	case '/':
-		tok = newToken(SLASH, l.ch)
+		if l.peekChar() == '/' {
+			// Consume the comment and move to the end of the line
+			l.readChar() // Consume the second '/'
+			for l.ch != '\n' && l.ch != 0 {
+				l.readChar()
+			}
+
+			if l.ch == 0 {
+				tok.Value = ""
+				tok.Type = EOF
+			}
+		} else {
+			tok = newToken(SLASH, l.ch)
+		}
 	case '*':
 		tok = newToken(ASTERISK, l.ch)
 	case '<':
@@ -127,16 +142,24 @@ func (l *Lexer) NextToken() Token {
 	case '}':
 		tok = newToken(RBRACE, l.ch)
 	case 0:
-		tok.Literal = ""
+		tok.Value = ""
 		tok.Type = EOF
+	case '"':
+		tok.Type = STRING
+		tok.Value = l.readString()
 	default:
 		if isLetter(l.ch) {
-			tok.Literal = l.readIdentifier()
-			tok.Type = LookupIdent(tok.Literal)
+			tok.Value = l.readIdentifier()
+			tok.Type = LookupIdent(tok.Value)
 			return tok
 		} else if isDigit(l.ch) {
-			tok.Literal = l.readNumber()
-			tok.Type = INT
+			tok.Value = l.readNumber()
+			// Determine if the token is INT or FLOAT
+			if strings.Contains(tok.Value, ".") {
+				tok.Type = FLOAT
+			} else {
+				tok.Type = INT
+			}
 			return tok
 		} else {
 			tok = newToken(ILLEGAL, l.ch)
@@ -155,11 +178,36 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+func (l *Lexer) readString() string {
+	position := l.position + 1
+	for {
+		l.readChar()
+		if l.ch == '"' || l.ch == 0 {
+			break
+		}
+	}
+	return l.input[position:l.position]
+}
+
 func (l *Lexer) readNumber() string {
 	position := l.position
-	for isDigit(l.ch) {
+	hasDecimal := false // New flag to indicate a decimal point
+
+	for isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) {
+		if l.ch == '.' {
+			if hasDecimal { // Second decimal point encountered, break out
+				break
+			}
+			hasDecimal = true
+		}
 		l.readChar()
 	}
+
+	// If the number includes a decimal point, it is a FLOAT
+	if hasDecimal {
+		return l.input[position:l.position]
+	}
+	// Else, it is an INT
 	return l.input[position:l.position]
 }
 
@@ -186,5 +234,5 @@ func isDigit(ch byte) bool {
 }
 
 func newToken(tokenType TokenType, ch byte) Token {
-	return Token{Type: tokenType, Literal: string(ch)}
+	return Token{Type: tokenType, Value: string(ch)}
 }

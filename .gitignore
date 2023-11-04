@@ -3,6 +3,3 @@
 
 # any .exe files
 *.exe
-
-# IntelliJ
-.idea/
