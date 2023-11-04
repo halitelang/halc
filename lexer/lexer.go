@@ -71,89 +71,89 @@ func NewLexer(input string) *Lexer {
 	return l
 }
 
-func (t *Lexer) readChar() {
-	if t.readPosition >= len(t.input) {
-		t.ch = 0
+func (l *Lexer) readChar() {
+	if l.readPosition >= len(l.input) {
+		l.ch = 0
 	} else {
-		t.ch = t.input[t.readPosition]
+		l.ch = l.input[l.readPosition]
 	}
-	t.position = t.readPosition
-	t.readPosition++
+	l.position = l.readPosition
+	l.readPosition++
 }
 
-func (t *Lexer) NextToken() Token {
+func (l *Lexer) NextToken() Token {
 	var tok Token
 
-	t.skipWhitespace()
+	l.skipWhitespace()
 
-	switch t.ch {
+	switch l.ch {
 	case '=':
-		if t.peekChar() == '=' {
-			ch := t.ch
-			t.readChar()
-			literal := string(ch) + string(t.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
 			tok = Token{Type: EQ, Value: literal}
 		} else {
-			tok = newToken(ASSIGN, t.ch)
+			tok = newToken(ASSIGN, l.ch)
 		}
 	case ';':
-		tok = newToken(SEMICOLON, t.ch)
+		tok = newToken(SEMICOLON, l.ch)
 	case '(':
-		tok = newToken(LPAREN, t.ch)
+		tok = newToken(LPAREN, l.ch)
 	case ')':
-		tok = newToken(RPAREN, t.ch)
+		tok = newToken(RPAREN, l.ch)
 	case ',':
-		tok = newToken(COMMA, t.ch)
+		tok = newToken(COMMA, l.ch)
 	case '+':
-		tok = newToken(PLUS, t.ch)
+		tok = newToken(PLUS, l.ch)
 	case '-':
-		tok = newToken(MINUS, t.ch)
+		tok = newToken(MINUS, l.ch)
 	case '!':
-		if t.peekChar() == '=' {
-			ch := t.ch
-			t.readChar()
-			tok = Token{Type: NOT_EQ, Value: string(ch) + string(t.ch)}
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tok = Token{Type: NOT_EQ, Value: string(ch) + string(l.ch)}
 		} else {
-			tok = newToken(BANG, t.ch)
+			tok = newToken(BANG, l.ch)
 		}
 	case '/':
-		if t.peekChar() == '/' {
+		if l.peekChar() == '/' {
 			// Consume the comment and move to the end of the line
-			t.readChar() // Consume the second '/'
-			for t.ch != '\n' && t.ch != 0 {
-				t.readChar()
+			l.readChar() // Consume the second '/'
+			for l.ch != '\n' && l.ch != 0 {
+				l.readChar()
 			}
 
-			if t.ch == 0 {
+			if l.ch == 0 {
 				tok.Value = ""
 				tok.Type = EOF
 			}
 		} else {
-			tok = newToken(SLASH, t.ch)
+			tok = newToken(SLASH, l.ch)
 		}
 	case '*':
-		tok = newToken(ASTERISK, t.ch)
+		tok = newToken(ASTERISK, l.ch)
 	case '<':
-		tok = newToken(LT, t.ch)
+		tok = newToken(LT, l.ch)
 	case '>':
-		tok = newToken(GT, t.ch)
+		tok = newToken(GT, l.ch)
 	case '{':
-		tok = newToken(LBRACE, t.ch)
+		tok = newToken(LBRACE, l.ch)
 	case '}':
-		tok = newToken(RBRACE, t.ch)
+		tok = newToken(RBRACE, l.ch)
 	case 0:
 		tok.Value = ""
 		tok.Type = EOF
 	case '"':
 		tok.Type = STRING
-		tok.Value = t.readString()
+		tok.Value = l.readString()
 	default:
-		if isLetter(t.ch) {
-			tok.Value = t.readIdentifier()
+		if isLetter(l.ch) {
+			tok.Value = l.readIdentifier()
 			tok.Type = LookupIdent(tok.Value)
 			return tok
-		} else if isDigit(t.ch) {
-			tok.Value = t.readNumber()
+		} else if isDigit(l.ch) {
+			tok.Value = l.readNumber()
 			// Determine if the token is INT or FLOAT
 			if strings.Contains(tok.Value, ".") {
 				tok.Type = FLOAT
@@ -162,66 +162,66 @@ func (t *Lexer) NextToken() Token {
 			}
 			return tok
 		} else {
-			tok = newToken(ILLEGAL, t.ch)
+			tok = newToken(ILLEGAL, l.ch)
 		}
 	}
 
-	t.readChar()
+	l.readChar()
 	return tok
 }
 
-func (t *Lexer) readIdentifier() string {
-	position := t.position
-	for isLetter(t.ch) {
-		t.readChar()
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
 	}
-	return t.input[position:t.position]
+	return l.input[position:l.position]
 }
 
-func (t *Lexer) readString() string {
-	position := t.position + 1
+func (l *Lexer) readString() string {
+	position := l.position + 1
 	for {
-		t.readChar()
-		if t.ch == '"' || t.ch == 0 {
+		l.readChar()
+		if l.ch == '"' || l.ch == 0 {
 			break
 		}
 	}
-	return t.input[position:t.position]
+	return l.input[position:l.position]
 }
 
-func (t *Lexer) readNumber() string {
-	position := t.position
+func (l *Lexer) readNumber() string {
+	position := l.position
 	hasDecimal := false // New flag to indicate a decimal point
 
-	for isDigit(t.ch) || (t.ch == '.' && isDigit(t.peekChar())) {
-		if t.ch == '.' {
+	for isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) {
+		if l.ch == '.' {
 			if hasDecimal { // Second decimal point encountered, break out
 				break
 			}
 			hasDecimal = true
 		}
-		t.readChar()
+		l.readChar()
 	}
 
 	// If the number includes a decimal point, it is a FLOAT
 	if hasDecimal {
-		return t.input[position:t.position]
+		return l.input[position:l.position]
 	}
 	// Else, it is an INT
-	return t.input[position:t.position]
+	return l.input[position:l.position]
 }
 
-func (t *Lexer) peekChar() byte {
-	if t.readPosition >= len(t.input) {
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
 		return 0
 	} else {
-		return t.input[t.readPosition]
+		return l.input[l.readPosition]
 	}
 }
 
-func (t *Lexer) skipWhitespace() {
-	for t.ch == ' ' || t.ch == '\t' || t.ch == '\n' || t.ch == '\r' {
-		t.readChar()
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
 	}
 }
 
