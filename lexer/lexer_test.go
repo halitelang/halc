@@ -7,7 +7,7 @@ import (
 func TestNextToken(t *testing.T) {
 	input := `
 let five = 5;
-let ten = 10;
+var ten = 10;
 let add = func(x, y) {
   x + y;
 };
@@ -34,7 +34,7 @@ if (5 < 10) {
 		{ASSIGN, "="},
 		{INT, "5"},
 		{SEMICOLON, ";"},
-		{LET, "let"},
+		{VARIABLE, "var"},
 		{IDENT, "ten"},
 		{ASSIGN, "="},
 		{INT, "10"},

@@ -42,6 +42,7 @@ const (
 	RETURN    TokenType = "RETURN"
 	LBRACKET  TokenType = "LBRACKET"
 	RBRACKET  TokenType = "RBRACKET"
+	VARIABLE  TokenType = "VARIABLE"
 )
 
 var keywords = map[string]TokenType{
@@ -52,7 +53,7 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
-	"var":    FUNCTION,
+	"var":    VARIABLE,
 }
 
 func LookupIdent(ident string) TokenType {
