@@ -2,14 +2,6 @@
 
 Welcome to the official repository of the `halc` compiler, the primary compiler for the Halite programming language. Halite is a general-purpose language that combines the efficiency of compiled languages with a minimal and readable syntax. Designed with modern programming practices in mind, Halite offers an extensive, modular standard library, easy parallelism through Fibers (coroutines), and a prototype-based procedural paradigm.
 
-## Features
-
-- **Compiled to Machine Code**: Enjoy the performance of direct machine-level execution.
-- **Prototype-Based Procedural Paradigm**: A flexible approach to procedural programming without the constraints of classes.
-- **Modular Standard Library**: Use only what you need, keeping your projects lightweight and efficient.
-- **Easy Parallelism**: Halite’s Fibers make writing concurrent code straightforward and maintainable.
-- **Minimal Syntax**: Focus on your code logic with a syntax that is easy to write and read.
-
 ## Getting Started
 
 ### Prerequisites
