@@ -39,6 +39,8 @@ const (
 	IF        TokenType = "IF"
 	ELSE      TokenType = "ELSE"
 	RETURN    TokenType = "RETURN"
+	LBRACKET  TokenType = "LBRACKET"
+	RBRACKET  TokenType = "RBRACKET"
 )
 
 var keywords = map[string]TokenType{
@@ -108,6 +110,10 @@ func (l *Lexer) NextToken() Token {
 		tok = newToken(PLUS, l.ch)
 	case '-':
 		tok = newToken(MINUS, l.ch)
+	case '[':
+		tok = newToken(LBRACKET, l.ch)
+	case ']':
+		tok = newToken(RBRACKET, l.ch)
 	case '!':
 		if l.peekChar() == '=' {
 			ch := l.ch
