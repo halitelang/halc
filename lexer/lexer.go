@@ -4,6 +4,14 @@ import "strings"
 
 type TokenType string
 
+func (l *Lexer) Lex() []Token {
+	var tokens []Token
+	for tok := l.NextToken(); tok.Type != EOF; tok = l.NextToken() {
+		tokens = append(tokens, tok)
+	}
+	return tokens
+}
+
 type Token struct {
 	Type  TokenType
 	Value string

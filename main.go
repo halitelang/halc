@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"halc/lexer" // Remember to replace this with the correct import path
+	"halc/lexer"
 	"os"
 	"path/filepath"
 )
@@ -38,8 +38,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	//Lexing
 	l := lexer.NewLexer(string(content))
-	for tok := l.NextToken(); tok.Type != lexer.EOF; tok = l.NextToken() {
-		fmt.Printf("%+v\n", tok)
+	tokens := l.Lex()
+	for _, token := range tokens {
+		fmt.Println(token)
 	}
 }
