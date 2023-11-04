@@ -2,33 +2,39 @@ package main
 
 import (
 	"fmt"
-	"halc/lexer" // Use the correct import path for your lexer package
+	"halc/lexer" // Remember to replace this with the correct import path
 	"os"
 	"path/filepath"
 )
 
+const (
+	RedColor    = "\033[31m"
+	YellowColor = "\033[33m"
+	ResetColor  = "\033[0m"
+)
+
 func main() {
+	fmt.Println("halc v0.0.1")
 	if len(os.Args) != 2 {
-		fmt.Println("Usage: halc <file_path.hal>")
+		fmt.Printf("%sUsage: halc <file_path.hal>%s\n", RedColor, ResetColor)
 		os.Exit(1)
 	}
 
 	filePath := os.Args[1]
 
-	// Check if the file has a .hal extension
 	if filepath.Ext(filePath) != ".hal" {
-		fmt.Println("Warning: file does not have a .hal extension")
+		fmt.Printf("%s[WARNING] File does not have a .hal extension%s\n", YellowColor, ResetColor)
 	}
 
 	absPath, err := filepath.Abs(filePath)
 	if err != nil {
-		fmt.Printf("Error getting absolute path: %s\n", err)
+		fmt.Printf("%s[ERROR] Error getting absolute path: %s%s\n", RedColor, err, ResetColor)
 		os.Exit(1)
 	}
 
 	content, err := os.ReadFile(absPath)
 	if err != nil {
-		fmt.Printf("Error reading file: %s\n", err)
+		fmt.Printf("%s[ERROR] Error reading file: %s%s\n", RedColor, err, ResetColor)
 		os.Exit(1)
 	}
 
