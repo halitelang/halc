@@ -19,7 +19,7 @@ const (
 	ASSIGN    TokenType = "ASSIGN"
 	PLUS      TokenType = "PLUS"
 	MINUS     TokenType = "MINUS"
-	MOUULO    TokenType = "MOUDLO"
+	MODULO    TokenType = "MODDLO"
 	BANG      TokenType = "BANG"
 	ASTERISK  TokenType = "ASTERISK"
 	SLASH     TokenType = "SLASH"
@@ -149,7 +149,7 @@ func (l *Lexer) NextToken() Token {
 	case '}':
 		tok = newToken(RBRACE, l.ch)
 	case '%':
-		tok = newToken(MOUULO, l.ch)
+		tok = newToken(MODULO, l.ch)
 	case 0:
 		tok.Value = ""
 		tok.Type = EOF
