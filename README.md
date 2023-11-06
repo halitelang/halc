@@ -20,7 +20,7 @@ cd halc
 Build the compiler:
 
 ```bash
-go build -o halc
+go build
 ```
 
 ### Usage
