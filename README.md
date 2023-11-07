@@ -7,7 +7,7 @@ Welcome to the official repository of the `halc` compiler, the primary compiler 
 
 - **Go**: Halite compiler is built in Go. Ensure you have the latest version of Go installed on your machine.
 
-### Installation
+### Building
 
 Clone the repository to your local machine:
 
