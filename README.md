@@ -1,7 +1,6 @@
 # halc Compiler
 
-Welcome to the official repository of the `halc` compiler, the primary compiler for the Halite programming language. Halite is a general-purpose language that combines the efficiency of compiled languages with a minimal and readable syntax. Designed with modern programming practices in mind, Halite offers an extensive, modular standard library, easy parallelism through Fibers (coroutines), and a prototype-based procedural paradigm. To find out about more features please read the organization README.
-
+Welcome to the official repository of the `halc` compiler, the primary compiler for the Halite programming language. For more information about Halite, please check the [organization README](https://github.com/halitelang).
 ## Getting Started
 
 ### Prerequisites
